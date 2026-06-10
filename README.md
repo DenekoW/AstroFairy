@@ -111,6 +111,10 @@ Any agent that accepts a system prompt or instructions file can use AstroFairy. 
 - `curl` — HTTP API access to SIMBAD, NED, MAST, VizieR, etc.
 - `python3` — recommended for astroquery, pyvo, and footprint verification scripts
 
+## If usefule
+
+happy to see your star:D
+
 ## Acknowledgments
 
 Thanks to [@JoanneJi](https://github.com/JoanneJi) and [@lailimin](https://github.com/lailimin) for their valuable suggestions and feedback during development.
