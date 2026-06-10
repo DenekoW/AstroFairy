@@ -1,12 +1,16 @@
 # AstroFairy
 
-Tired of digging through scattered telescope documentation every time you need survey data? Found an interesting object but don't want to manually check a dozen archives for multi-wavelength coverage? AstroFairy handles it.
+**Version**: 0.3
+
+Readme in Chinese: [简体中文](README.zh-CN.md)
+
+Tired of digging through scattered telescope documentation every time you need survey data? 
+
+Found an interesting object but don't want to manually check a dozen archives for multi-wavelength coverage? 
+
+AstroFairy handles it.
 
 AstroFairy is an observer-oriented research skill. It investigates public survey/archive data — what's available, how to access it, and what caveats to watch for. It also checks what data and approved proposals cover a given sky coordinate.
-
-[简体中文](README.zh-CN.md)
-
-**Version**: 0.3
 
 ## Quick Start
 
@@ -21,11 +25,7 @@ hermes skills install astrofairy
 # Option 3: Manual clone
 git clone https://github.com/denekow/astrofairy.git ~/.hermes/skills/astrofairy/
 ```
-
-Then ask in any Hermes session:
-- `"Investigate Gaia DR3"`
-- `"RA=149.8226 Dec=1.7284 — what data is available?"`
-- `"Does TOI-270 have any JWST proposals?"`
+Then you can use it!
 
 ## AstroFairy's Three Modes
 
