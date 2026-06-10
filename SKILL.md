@@ -5,7 +5,20 @@ description: >
   for a specified observer task. The skill supports both Survey Mode
   (given a survey/release, explain how to use it) and Position Mode
   (given a coordinate/object, summarize useful survey/archive coverage and
-  observation availability across major data services).
+  observation availability across major data services). Use when user asks
+  about survey coverage, archive data access, telescope data products,
+  image cutout/download, PSF/mask/variance, proposal/program checking,
+  multi-wavelength data inventory, or observation availability at a sky coordinate.
+license: MIT
+compatibility: >
+  Designed for Hermes Agent. Requires terminal, file (write/patch),
+  and browser tools. Needs curl for API access and python3 for
+  astroquery/pyvo (optional). Can be adapted for Claude Code (CLAUDE.md),
+  OpenAI Codex (.codex.md), or any agent that accepts markdown instruction files.
+metadata:
+  version: "0.3"
+  author: DenekoW
+  repository: https://github.com/DenekoW/AstroFairy
 ---
 
 # AstroFairy
