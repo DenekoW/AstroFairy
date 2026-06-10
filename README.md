@@ -4,6 +4,8 @@ Tired of digging through scattered telescope documentation every time you need s
 
 AstroFairy is an observer-oriented research skill. It investigates public survey/archive data — what's available, how to access it, and what caveats to watch for. It also checks what data and approved proposals cover a given sky coordinate.
 
+[简体中文](README.zh-CN.md)
+
 **Version**: 0.3
 
 ## Quick Start

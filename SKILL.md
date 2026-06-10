@@ -242,7 +242,8 @@ JWST is the highest-priority target for proposal checking. Official sources:
 | **Role** | Fast discovery tool for public approved JWST proposal text, target names, abstracts, descriptions, and observation tables |
 | **Use for** | Target name search, alias search, proposal keyword search, object list cross-match, candidate program discovery |
 | **Limitations** | Not authoritative for execution status; not authoritative for data public status; not sufficient for exact detector footprint containment; extracted from public proposal documents — parsing errors possible |
-| **⚠️ Browser required** | This is a client-side React SPA. The API endpoint returns HTML (not JSON). Cannot be accessed via `curl`. Use a real browser or ask the user to search manually. |
+| **Availability** | Requires a browser (client-side React SPA). In Docker containers or headless environments where no browser is installed, skip this tool and use fallbacks: (1) STScI Approved Programs page grep, (2) arXiv literature search, (3) MAST Name.Lookup + Observations query. See `references/jwst-proposal-check.md` for detailed fallback workflows. |
+| **Verification rule** | Treat matches as **candidate** proposal coverage. Verify program status, observation execution, public/proprietary state, data products, and exact spatial coverage using MAST, STScI program information, or ESA JWST Archive. |
 | **Fallback: arXiv literature** | When the JWST search tool is unavailable (no browser), search arXiv for `"TOI-XXX" + "JWST"` or `"target_name" + "JWST"` to find papers discussing JWST observations. This confirms observation existence but does NOT provide program IDs. |
 | **Verification rule** | Treat matches as **candidate** proposal coverage. Verify program status, observation execution, public/proprietary state, data products, and exact spatial coverage using MAST, STScI program information, or ESA JWST Archive. |
 
@@ -595,6 +596,11 @@ For **URL discovery** on survey sites: check the homepage's menu structure first
 - **Option D — jq**: `curl ... | jq '.data[] | {ra, dec}'` (jq is not a full interpreter, usually passes)
 
 **Prefer Option A (temp file) for reliability.** The pipe-to-interpreter block specifically targets `| python3`, `| node`, `| ruby`, and similar patterns where the curl output is directly fed to a code interpreter without inspection.
+
+**⚠️ Browser tool may be unavailable**: In Docker environments without pre-installed Chromium, `browser_navigate` and `browser_*` tools may not work. `agent-browser` requires Node.js ≥ 24 and root npm permissions. Playwright Chromium downloads (~150MB) may time out on slow connections. Fallbacks for browser-dependent tasks:
+- For JWST proposal search: use arXiv literature reverse-search, or ask user to search `https://jwst-search.zhechenghu.com/` manually
+- For MAST object resolution: use `Mast.Name.Lookup` API (works without browser)
+- For HTML-heavy survey sites: use `curl` + `grep`/`sed` extraction patterns (see above)
 
 ## Non-Goals
 
