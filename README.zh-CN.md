@@ -112,6 +112,3 @@ codex --instructions "$(cat SKILL.md)"
 
 ## 如果真的对你的研究有帮助
 点个Star吧！
-
-## 致谢
-感谢
