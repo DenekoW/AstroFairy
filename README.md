@@ -115,6 +115,14 @@ Any agent that accepts a system prompt or instructions file can use AstroFairy. 
 
 happy to see your star:D
 
+## Future Work
+
+- **Scriptable archive modules** — Inspired by `telarchive`. Package each reference as a lightweight module with `{endpoint, param_template, response_parser}` so the agent can batch-query archives with coordinate substitution, rather than crafting per-archive curl commands each time.
+- **Unified response parser** — Standardize archive query results into a common format (`{covered: bool, n_records, instruments, access_url}`) to simplify report generation.
+- **Plugin-style discovery** — A `module_list`-style registry so adding a new survey only requires a new reference file, no SKILL.md edits.
+- **Python API** — Expose `from astrofairy import position_search; position_search("TOI-270")` for direct use in scripts.
+- **Parallel multi-archive concurrency** — Query all archives simultaneously instead of sequentially.
+
 ## Acknowledgments
 
 Thanks to [@JoanneJi](https://github.com/JoanneJi) and [@lailimin](https://github.com/lailimin) for their valuable suggestions and feedback during development.

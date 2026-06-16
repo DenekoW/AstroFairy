@@ -113,5 +113,13 @@ codex --instructions "$(cat SKILL.md)"
 ## 如果真的对你的研究有帮助
 点个Star吧！
 
+## 未来计划
+
+- **脚本化 archive 模块** — 受 `telarchive` 启发。将每个 reference 封装为轻量模块 `{endpoint, param_template, response_parser}`，agent 填入坐标即可批量并发查询，无需每次手写 curl。
+- **统一返回解析器** — 将各 archive 的返回结果标准化为统一格式（`{covered: bool, n_records, instruments, access_url}`），简化报告生成。
+- **插件式注册** — 类似 `module_list` 的注册机制，新增巡天只需加一个 reference 文件，无需修改 SKILL.md。
+- **Python API** — 提供 `from astrofairy import position_search; position_search("TOI-270")` 供脚本直接调用。
+- **并行多 archive 查询** — 同时查询所有 archive，而非顺序执行。
+
 ## 致谢
 感谢 [@JoanneJi](https://github.com/JoanneJi) 和 [@lailimin](https://github.com/lailimin) 在开发过程中提供的宝贵建议和反馈。
