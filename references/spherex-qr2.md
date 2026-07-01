@@ -99,19 +99,26 @@ AWS S3 — available for bulk processing.
 | PSF | `https://caltech-ipac.github.io/irsa-tutorials/spherex-psf/` |
 | Source Discovery | `https://caltech-ipac.github.io/irsa-tutorials/spherex-source-discovery-tool-demo/` |
 
-## LSB / Stellar Halo Relevance
+## Science Application Notes
 
 **MAJOR MISMATCH**: SPHEREx is a spectroscopic survey, NOT an imaging survey.
 
-- ❌ 6.2″ pixels — cannot resolve stellar halos or galaxy morphology
-- ❌ ~19.4 AB mag at 2 μm — too shallow for extragalactic LSB surface photometry
-- ❌ No broad-band coadd images or traditional mask/variance products
-- ✅ All-sky spectral identification — useful for LSB candidate confirmation
-- ✅ Cross-match with imaging surveys (HSC, LSST, Legacy) — 0.75–5.0 μm SEDs
-- ✅ Galaxy redshift catalog (May 2028)
-- ⚠️ Deep Field spectroscopy (May 2028) — deeper, but still spectroscopy
+**What SPHEREx QR2 CAN do:**
+- All-sky NIR spectroscopy (0.75–5.0 μm, R~40–130) — unique spectral survey coverage
+- Spectral cross-identification across the entire sky
+- Uniform all-sky spectrophotometric catalog
+- Low-resolution SED classification at NIR wavelengths
+- Cross-match with imaging surveys (HSC, LSST, Legacy) — 0.75–5.0 μm SEDs
+- Galaxy redshift catalog (May 2028) — deep field redshifts
+- Deep Field spectroscopy (May 2028) — deeper, but still spectroscopy
 
-**Recommendation for LSB**: Use SPHEREx for spectral cross-identification, NOT for resolved surface photometry. Pair with HSC/Legacy/LSST imaging.
+**What SPHEREx QR2 CANNOT do:**
+- Resolved imaging — 6.2″ pixels, no broad-band coadd images, no PSF model for image-plane analysis
+- Surface photometry — ~19.4 AB mag at 2 μm, too shallow for surface brightness work
+- Galaxy morphology — pixel scale too coarse
+- No traditional mask/variance products for image modeling
+
+**Recommendation**: Use SPHEREx for spectral cross-identification and all-sky spectrophotometry, NOT for resolved surface photometry. Pair with imaging surveys for spatial information.
 
 ## Citation
 

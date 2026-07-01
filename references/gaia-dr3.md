@@ -12,7 +12,7 @@ Last verified: 2026-06-09. Source: official docs at `gea.esac.esa.int/archive/do
 
 ## Critical: Not an Imaging Survey
 
-Gaia produces NO pixel-level images. No coadds, no cutouts, no image-plane PSF, no pixel masks, no variance/weight maps exist. This is fundamental for LSB/halo science planning.
+Gaia produces NO pixel-level images. No coadds, no cutouts, no image-plane PSF, no pixel masks, no variance/weight maps exist. This is fundamental for any science requiring image-level data.
 
 ## Data Products
 
@@ -113,23 +113,24 @@ result = service.search("SELECT TOP 100 * FROM gaiadr3.gaia_source")
 | `visibility_periods_used` | Scan coverage metric |
 | `solution_id` | Processing version tag |
 
-## LSB / Stellar Halo Relevance
+## Science Application Notes
 
 **What Gaia CAN do:**
-- Proper motions of resolved halo stars → identify stream members
-- Parallax distances for nearby halo stars
-- G/BP/RP photometry for resolved stellar populations
-- QSO catalog for background estimation
-- Cross-matching with imaging surveys (HSC, DESI-LS, Pan-STARRS)
-- Extinction maps
+- Astrometry: positions, proper motions, parallaxes — for galactic dynamics, structure, streams
+- Photometry: G/BP/RP magnitudes for resolved stellar populations, SEDs
+- Spectroscopy: RVS for bright stars (Ca II triplet region); BP/RP low-res spectra for broader sample
+- Cross-matching: built-in cross-matches to Hipparcos-2, Tycho-2, 2MASS, SDSS DR13, Pan-STARRS1 DR1, allWISE
+- Extinction: all-sky total galactic extinction maps
+- Galaxy/QSO candidates: ~4.8M galaxies (with surface brightness profiles for ~900K), ~6.6M QSOs
+- Variability: 10.5M sources with 24 variability classes
 
 **What Gaia CANNOT do:**
-- LSB / UDG detection (no images)
-- Surface brightness measurements
-- Extended source photometry (point-source optimized pipeline)
-- Galaxy morphology analysis
+- Image-plane analysis (no pixel data available)
+- Surface brightness measurements (point-source pipeline)
+- Extended source photometry (may split into multiple detections or miss entirely)
+- High-resolution optical spectroscopy (RVS limited to R~11,500, Ca II triplet region only)
 
-**Critical caveat**: Gaia is a point-source catalog. Extended LSB galaxies have highly incomplete photometry and may be split into multiple detections or missed entirely. The `galaxy_candidates` table uses BP/RP SED fitting, not aperture photometry.
+**Critical caveat**: Gaia is a point-source catalog. Extended sources have highly incomplete photometry and may be shredded into multiple detections. The `galaxy_candidates` table uses BP/RP SED fitting, not aperture photometry. For resolved source photometry, cross-match with imaging surveys.
 
 ## Citation
 

@@ -69,6 +69,10 @@ Load this skill when user asks:
 - "有没有 proposal / 有没有被 JWST 观测 / 有没有已批准项目"
 - "Check if this target has proprietary or planned observations."
 - "What JWST programs target this object or field?"
+- "Check Subaru/HSC proposals for this target."
+- "有没有 HSC/Subaru proposal / 有没有被 Subaru 观测"
+- "Check Keck proposals for this target."
+- "有没有 Keck proposal / KOA archive for this target"
 
 ## Input Parsing
 
@@ -227,11 +231,11 @@ X-ray / AGN:
 **Purpose**: Given a coordinate, object name, alias list, or target list, check whether relevant approved observing programs, scheduled/planned observations, executed observations, proprietary data, or public archive products exist. This is a program-level extension of Position Mode.
 
 **Scope by confidence**:
-- High confidence: JWST, HST (MAST missions with structured observation metadata)
-- Medium confidence: ALMA, Chandra, XMM-Newton, ESO/NOIRLab archives if relevant
+- High confidence: JWST, HST (MAST missions with structured observation metadata), Subaru/HSC (NAOJ per-semester accepted proposals list, publicly available)
+- Medium confidence: ALMA, Chandra, XMM-Newton, ESO/NOIRLab archives, Keck (public schedule + KOA archive; no structured per-semester accepted proposals page like Subaru)
 - Low confidence / manual: facilities without structured public program search
 
-**Default facilities to check**: JWST, HST, MAST, ALMA (if mm/sub-mm relevance), Chandra (if X-ray relevance), XMM-Newton (if X-ray relevance)
+**Default facilities to check**: JWST, HST, Subaru/HSC, MAST, ALMA (if mm/sub-mm relevance), Keck (if optical/NIR relevance), Chandra (if X-ray relevance), XMM-Newton (if X-ray relevance)
 
 ### JWST Proposal Check
 
@@ -289,6 +293,68 @@ Activate when: science case mentions mm/sub-mm, molecular gas/dust, or user expl
 Query route: ALMA Science Archive, ALMA archive query interface
 
 ALMA output fields: project_code, target_name, band/frequency, array_configuration, observation_status, public/proprietary, product_type, access_route, confidence
+
+### Subaru / HSC Proposal Check
+
+Subaru publishes accepted proposals per semester as a structured, publicly accessible list for every semester from S00 to present (S26B as of 2026).
+
+**Official sources**:
+
+| Source | URL | Role |
+|---|---|---|
+| NAOJ Past Semester Info | `https://www.naoj.org/Observing/Proposals/pastinfo.html` | Index of all semester proposal lists (S00–S26B) |
+| Per-semester page | `https://www.naoj.org/Observing/Proposals/Pastinfo/s{XX}{a\|b}.html` | Accepted proposals for a given semester: ID, PI, Proposal Title, Instrument, Nights, Abstract |
+| Subaru Schedule | `https://www.naoj.org/cgi-bin/opecenter/schedule.cgi/` | Nightly telescope schedule with program IDs, PIs, instruments |
+| SMOKA Archive | `https://smoka.nao.ac.jp/` | Data archive — HSC Search for raw data, Advanced Search for reductions |
+| SMOKA HSC Search | `https://smoka.nao.ac.jp/HSCsearch.jsp` | HSC-specific raw data search |
+
+**Proposal page structure**: Each semester page (e.g., S26B) contains:
+- Summary statistics: total proposals submitted, nights requested, nights allocated
+- Table: ID (e.g., S26A-147), PI, Proposal Title, Instrument, Nights, Abstract
+- Intensive Programs (multi-semester) listed separately
+- HSC Queue mode allocations noted
+
+**Search strategy** (headless/Docker environments):
+- **Page text search**: The NAOJ pages use MkDocs Material (JS-rendered). In headless environments (no browser), `curl` can only extract the summary statistics and page structure, NOT the proposal table data. The table is loaded dynamically via JS.
+- **Fallback: schedule page**: The nightly schedule at `schedule.cgi/` is plain HTML and fully parseable with `curl`. You can grep for program IDs (e.g., `S26A-`, `S26B-`) and PI names to find executed programs.
+- **Fallback: arXiv literature**: Search arXiv for `"target_name" + "HSC"` or `"target_name" + "Subaru"` to find papers using HSC/Subaru data — confirms observation existence.
+- **Verification rule**: Browser access is recommended for full proposal table search. In headless mode, use schedule page + arXiv literature as fallback.
+
+**Subaru output fields**: program_id (e.g., S26A-147), semester, proposal_title, PI, instrument (HSC, MOIRCS, IRCS, HDS, etc.), nights_allocated, queue_or_classical, observation_status (from schedule page), data_available (via SMOKA), access_route, confidence, verification_needed
+
+**Subaru program ID format**:
+- `S{YY}{A|B}-NNN` — Normal Program (e.g., S26A-147)
+- `S{YY}{A|B}-OTNNN` — ToO Program
+- `S{YY}{A|B}-UHNNN` — University of Hawaii
+- `S{YY}{A|B}-TENNN` — Engineering
+- `S{YY}{A|B}-INNN` — Intensive Program
+
+### Keck Proposal Check
+
+Keck Observatory publishes nightly telescope schedules showing executed programs, but does NOT maintain a structured per-semester "accepted proposals" list comparable to Subaru's. Proposal metadata exists in the schedule feed and the KOA archive.
+
+**Official sources**:
+
+| Source | URL | Role |
+|---|---|---|
+| Keck Schedule | `http://www2.keck.hawaii.edu/schedule/` | Nightly schedule: PI, institution, instrument, project codes (HTTP only) |
+| Keck Schedule RSS | `http://www2.keck.hawaii.edu/schedule/ws/schedule.rss` | RSS feed of nightly schedule (HTTP only) |
+| KOA Archive | `https://koa.ipac.caltech.edu/` | Keck Observatory Archive — data search and download |
+| Keck Observer Info | `https://keckobservatory.org/science/observing/` | General observing information (not a proposal list) |
+
+**Search strategy**:
+- **Schedule feed**: The RSS feed and schedule page show nightly executed programs with PI names, institutions, instruments (MOSFIRE, DEIMOS, LRIS, NIRSPEC, KCWI, etc.), and project codes (e.g., `U075M` for UCLA, `C123` for Caltech).
+- **KOA Archive**: Search by target coordinates, object name, or program/investigator. Provides access to public data products.
+- **No structured proposal list**: Unlike Subaru, Keck does not publish a per-semester accepted proposals page with titles and abstracts. The TAC results are not systematically public.
+- **Verification**: Schedule presence confirms execution but not proposal acceptance. KOA confirms data availability.
+
+**Keck output fields**: program_code, semester, PI (from schedule), institution, instrument, observation_date (from schedule), data_available (via KOA), access_route, confidence
+
+**⚠️ Keck schedule caveats**:
+- Schedule pages use **HTTP only** (not HTTPS) — may be blocked in some environments
+- No structured proposal title or abstract search available
+- Project codes (e.g., `C123`, `U075M`) are institution-specific, not globally unique
+- KOA is the recommended primary access point for data products
 
 ### Ranking Rules
 
@@ -653,4 +719,4 @@ You are an observer-oriented astronomical survey access investigator with two mo
 
 **Position Mode**: Given a coordinate or object name, summarize useful survey/archive coverage and observation availability across major data services (CDS SIMBAD, CDS VizieR, NED, MAST, IRSA, SPHEREx QR2, ESA ESASky, major optical imaging surveys, and relevant wavelength-specific archives). Always check MAST by default. Choose appropriate search radii for point vs extended sources. Rank results by science-case usefulness — do NOT return unfiltered catalog dumps. Prioritize image-level products with PSF, masks, variance/weight maps. Report access routes and caveats. Group low-priority items in a deprioritized section. Warn when footprint coverage does not guarantee target coverage.
 
-**Proposal Check** (sub-mode of Position Mode): When user asks about approved observing programs (JWST/HST/ALMA/etc.), check proposal coverage using official sources (STScI Approved Programs, MAST, ALMA Archive) and the third-party JWST proposal search tool (`https://jwst-search.zhechenghu.com/`). Treat third-party matches as candidates requiring official verification. Distinguish executed vs planned, public vs proprietary, and exact target coverage vs nearby fields. Return program ID, cycle, PI, instrument, status, and access routes.
+**Proposal Check** (sub-mode of Position Mode): When user asks about approved observing programs (JWST/HST/Subaru/Keck/ALMA/etc.), check proposal coverage using official sources (STScI Approved Programs, MAST, NAOJ per-semester accepted proposals, Keck schedule/KOA, ALMA Archive) and the third-party JWST proposal search tool (`https://jwst-search.zhechenghu.com/`). For Subaru: check per-semester accepted proposals at `naoj.org/Observing/Proposals/Pastinfo/` (browser needed for full table; schedule page parseable with curl). For Keck: check nightly schedule + KOA archive (no structured per-semester proposal list). Treat third-party matches as candidates requiring official verification. Distinguish executed vs planned, public vs proprietary, and exact target coverage vs nearby fields. Return program ID, cycle, PI, instrument, status, and access routes.
