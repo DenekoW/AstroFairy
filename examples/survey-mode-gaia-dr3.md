@@ -15,8 +15,8 @@ Skill: astro-survey-access-investigator v0.1
 | User task | General investigation (coverage, catalog, access, suitability) |
 | Target/field | Not specified |
 | Desired products | All available |
-| Science case | LSB / stellar halo / ICL / galaxy evolution (inferred from user profile) |
-| Assumptions | User works on low-surface-brightness / stellar halo / UDG science |
+| Science case | General (Galactic and extragalactic astrometry, photometry, spectroscopy) |
+| Assumptions | User needs Gaia DR3 astrometric, photometric, or spectroscopic catalog data |
 
 ---
 
@@ -26,10 +26,10 @@ Skill: astro-survey-access-investigator v0.1
 
 | Question | Answer |
 |---|---|
-| Can user do their LSB/halo science with DR3? | **Not as primary data source.** Gaia provides NO pixel-level images. |
-| What GAIA is good for in this context | Stellar astrometry & proper motions for resolved halo streams; photometry of bright resolved stars; QSO catalog for background subtraction; cross-matching with imaging surveys |
+| Can user do their science with DR3? | **Not as primary data source.** Gaia provides NO pixel-level images. |
+| What GAIA is good for | Stellar astrometry & proper motions; photometry of bright resolved stars; QSO catalog; cross-matching with imaging surveys |
 | Recommended route | TAP/ADQL via astroquery.gaia or PyVO |
-| Main caveat | Gaia is an **astrometric/photometric/spectroscopic mission**, NOT an imaging survey. No coadds, no cutouts, no PSF/mask/variance maps exist. For LSB imaging, use HSC-SSP, DESI-LS, or future Euclid/LSST. |
+| Main caveat | Gaia is an **astrometric/photometric/spectroscopic mission**, NOT an imaging survey. No coadds, no cutouts, no PSF/mask/variance maps exist. For imaging data, use HSC-SSP, DESI-LS, or future Euclid/LSST. |
 
 ---
 
@@ -161,7 +161,7 @@ Row limits: default sync limit ~2000 rows (adjustable); async jobs handle larger
 
 **Not applicable.** Gaia does NOT produce images. There are no cutout services, no FITS images, no coadds.
 
-If the user needs imaging data for LSB/halo science, they should combine Gaia with:
+If the user needs imaging data, they should combine Gaia with:
 - HSC-SSP PDR3 (see `hsc-ssp-pdr3.md` reference)
 - DESI Legacy Imaging Surveys DR9/DR10
 - Pan-STARRS DR2

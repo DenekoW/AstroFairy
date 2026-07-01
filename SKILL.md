@@ -663,6 +663,8 @@ For **URL discovery** on survey sites: check the homepage's menu structure first
 
 **LaTeXML-based documentation** (e.g., Gaia DR3 archive docs): Use `curl | sed 's/<[^>]*>//g'` then `grep -v` to strip JS/CSS boilerplate. LaTeXML renders content as clean text within HTML tags — this extraction works well. Distinguish from WordPress sites which require different patterns.
 
+**⚠️ Terminal `&&` chains are blocked**: The Hermes terminal tool rejects commands with `&&` as foreground multi-step chains (`"Foreground command uses '&' backgrounding"`). Split multi-step workflows into separate `terminal` calls (git add, git commit, git pull, git push as individual invocations).
+
 **⚠️ Pipe-to-interpreter is blocked by security scanner**: Patterns like `curl ... | python3 -c "..."` and `curl ... | python3 -m json.tool` are flagged as HIGH severity and **will be blocked**. When you need to process API JSON responses on the command line, use one of these alternatives:
 
 - **Option A — Two-step**: `curl ... -o /tmp/resp.json && python3 -c "..." /tmp/resp.json`
